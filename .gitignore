@@ -1,7 +1,11 @@
+env/
+venv/
 bin
 include
 lib
 .Python
-tests/
 .envrc
-__pycache__
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/

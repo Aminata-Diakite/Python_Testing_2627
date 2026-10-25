@@ -56,8 +56,8 @@ def test_booking_exactly_12_places_is_accepted(client):
 
 
 def test_booking_cumulative_places_above_12_is_refused(client):
-    book(client, "Simply Lift", "Spring Festival", 8)
-    response = book(client, "Simply Lift", "Spring Festival", 6)
+    book(client, "Simply Lift", "Spring Festival", 4)
+    response = book(client, "Simply Lift", "Spring Festival", 9)
     assert b"more than 12" in response.data
-    assert int(find_club("Simply Lift")["points"]) == 5
-    assert int(find_competition("Spring Festival")["numberOfPlaces"]) == 17
+    assert int(find_club("Simply Lift")["points"]) == 9
+    assert int(find_competition("Spring Festival")["numberOfPlaces"]) == 21

@@ -25,3 +25,8 @@ def test_points_board_reflects_points_after_booking(client):
 def test_points_board_has_a_link_back_to_login(client):
     response = client.get("/points")
     assert b'href="/"' in response.data
+
+
+def test_login_page_links_to_points_board(client):
+    response = client.get("/")
+    assert b'href="/points"' in response.data

@@ -27,3 +27,16 @@ def test_booking_deducts_points_from_club(client):
     response = book(client, "Simply Lift", "Spring Festival", 3)
     assert int(find_club("Simply Lift")["points"]) == 10
     assert b"Points available: 10" in response.data
+
+
+def test_booking_more_places_than_club_points_is_refused(client):
+    response = book(client, "Iron Temple", "Spring Festival", 5)
+    assert b"not enough points" in response.data
+    assert int(find_club("Iron Temple")["points"]) == 4
+    assert int(find_competition("Spring Festival")["numberOfPlaces"]) == 25
+
+
+def test_booking_exactly_all_club_points_is_accepted(client):
+    response = book(client, "Iron Temple", "Spring Festival", 4)
+    assert b"Great-booking complete!" in response.data
+    assert int(find_club("Iron Temple")["points"]) == 0

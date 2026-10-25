@@ -61,3 +61,12 @@ def test_booking_cumulative_places_above_12_is_refused(client):
     assert b"more than 12" in response.data
     assert int(find_club("Simply Lift")["points"]) == 9
     assert int(find_competition("Spring Festival")["numberOfPlaces"]) == 21
+
+def test_booking_more_places_than_available_is_refused(client):
+    server.competitions.append(
+        {"name": "Mini Cup", "date": "2027-06-01 10:00:00", "numberOfPlaces": "2"}
+    )
+    response = book(client, "Simply Lift", "Mini Cup", 3)
+    assert b"not enough places" in response.data
+    assert int(find_competition("Mini Cup")["numberOfPlaces"]) == 2
+    assert int(find_club("Simply Lift")["points"]) == 13

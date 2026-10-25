@@ -92,3 +92,34 @@ def test_welcome_page_hides_booking_link_for_past_competition(client):
     response = client.post("/showSummary", data={"email": "john@simplylift.co"})
     assert b"/book/Old%20Cup/" not in response.data
     assert b"/book/Spring%20Festival/" in response.data
+
+
+def test_booking_zero_places_is_refused(client):
+    response = book(client, "Simply Lift", "Spring Festival", 0)
+    assert b"valid number" in response.data
+    assert int(find_club("Simply Lift")["points"]) == 13
+
+
+def test_booking_negative_places_is_refused(client):
+    response = book(client, "Simply Lift", "Spring Festival", -3)
+    assert b"valid number" in response.data
+    assert int(find_club("Simply Lift")["points"]) == 13
+    assert int(find_competition("Spring Festival")["numberOfPlaces"]) == 25
+
+
+def test_booking_text_instead_of_number_is_refused(client):
+    response = client.post(
+        "/purchasePlaces",
+        data={"club": "Simply Lift", "competition": "Spring Festival", "places": "abc"},
+    )
+    assert response.status_code == 200
+    assert b"valid number" in response.data
+
+
+def test_booking_empty_places_is_refused(client):
+    response = client.post(
+        "/purchasePlaces",
+        data={"club": "Simply Lift", "competition": "Spring Festival", "places": ""},
+    )
+    assert response.status_code == 200
+    assert b"valid number" in response.data

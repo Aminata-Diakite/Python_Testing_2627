@@ -57,7 +57,13 @@ def book(competition,club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
+    try:
+        placesRequired = int(request.form['places'])
+    except ValueError:
+        placesRequired = 0
+    if placesRequired <= 0:
+        flash("Error: please enter a valid number of places.")
+        return render_template('welcome.html', club=club, competitions=competitions)
     if is_past(competition):
         flash("Error: this competition has already taken place.")
         return render_template('welcome.html', club=club, competitions=competitions)

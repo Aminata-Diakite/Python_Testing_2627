@@ -29,6 +29,24 @@ def is_past(competition):
 
 app.jinja_env.globals['is_past'] = is_past
 
+
+def parse_places(raw):
+    try:
+        value = int(raw)
+    except (ValueError, TypeError):
+        return 0
+    return value if value > 0 else 0
+
+
+def check_booking(places, points, available, already):
+    if places > available:
+        return "Error: not enough places available in this competition."
+    if places > points:
+        return "Error: not enough points to book this number of places."
+    if already + places > MAX_PLACES_PER_COMPETITION:
+        return "Error: you cannot book more than 12 places in a competition."
+    return None
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -59,25 +77,18 @@ def purchasePlaces():
     if competition is None or club is None:
         flash("Something went wrong-please try again")
         return render_template('index.html')
-    try:
-        placesRequired = int(request.form['places'])
-    except ValueError:
-        placesRequired = 0
-    if placesRequired <= 0:
+    placesRequired = parse_places(request.form.get('places'))
+    if placesRequired == 0:
         flash("Error: please enter a valid number of places.")
         return render_template('welcome.html', club=club, competitions=competitions)
     if is_past(competition):
         flash("Error: this competition has already taken place.")
         return render_template('welcome.html', club=club, competitions=competitions)
-    if placesRequired > int(competition['numberOfPlaces']):
-        flash("Error: not enough places available in this competition.")
-        return render_template('welcome.html', club=club, competitions=competitions)
-    if placesRequired > int(club['points']):
-        flash("Error: not enough points to book this number of places.")
-        return render_template('welcome.html', club=club, competitions=competitions)
     already = bookings.get((club['name'], competition['name']), 0)
-    if already + placesRequired > MAX_PLACES_PER_COMPETITION:
-        flash("Error: you cannot book more than 12 places in a competition.")
+    error = check_booking(placesRequired, int(club['points']),
+                          int(competition['numberOfPlaces']), already)
+    if error:
+        flash(error)
         return render_template('welcome.html', club=club, competitions=competitions)
     bookings[(club['name'], competition['name'])] = already + placesRequired
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired

@@ -123,3 +123,27 @@ def test_booking_empty_places_is_refused(client):
     )
     assert response.status_code == 200
     assert b"valid number" in response.data
+
+
+def test_book_page_with_unknown_competition_does_not_crash(client):
+    response = client.get("/book/Inconnue/Simply Lift")
+    assert response.status_code == 200
+    assert b"Something went wrong" in response.data
+
+
+def test_book_page_with_unknown_club_does_not_crash(client):
+    response = client.get("/book/Spring Festival/Inconnu")
+    assert response.status_code == 200
+    assert b"Something went wrong" in response.data
+
+
+def test_purchase_with_unknown_competition_does_not_crash(client):
+    response = book(client, "Simply Lift", "Inconnue", 1)
+    assert response.status_code == 200
+    assert b"Something went wrong" in response.data
+
+
+def test_purchase_with_unknown_club_does_not_crash(client):
+    response = book(client, "Inconnu", "Spring Festival", 1)
+    assert response.status_code == 200
+    assert b"Something went wrong" in response.data

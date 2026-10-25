@@ -7,6 +7,7 @@ import server
 def reset_data():
     server.clubs = server.loadClubs()
     server.competitions = server.loadCompetitions()
+    server.bookings.clear()
 
 
 @pytest.fixture

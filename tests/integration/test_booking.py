@@ -40,3 +40,24 @@ def test_booking_exactly_all_club_points_is_accepted(client):
     response = book(client, "Iron Temple", "Spring Festival", 4)
     assert b"Great-booking complete!" in response.data
     assert int(find_club("Iron Temple")["points"]) == 0
+
+
+def test_booking_more_than_12_places_in_one_request_is_refused(client):
+    response = book(client, "Simply Lift", "Spring Festival", 13)
+    assert b"more than 12" in response.data
+    assert int(find_club("Simply Lift")["points"]) == 13
+    assert int(find_competition("Spring Festival")["numberOfPlaces"]) == 25
+
+
+def test_booking_exactly_12_places_is_accepted(client):
+    response = book(client, "Simply Lift", "Spring Festival", 12)
+    assert b"Great-booking complete!" in response.data
+    assert int(find_club("Simply Lift")["points"]) == 1
+
+
+def test_booking_cumulative_places_above_12_is_refused(client):
+    book(client, "Simply Lift", "Spring Festival", 4)
+    response = book(client, "Simply Lift", "Spring Festival", 9)
+    assert b"more than 12" in response.data
+    assert int(find_club("Simply Lift")["points"]) == 9
+    assert int(find_competition("Spring Festival")["numberOfPlaces"]) == 21

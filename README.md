@@ -1,81 +1,44 @@
-# Intro
-```
-Hey,
+﻿# GUDLFT, réservation de places pour les compétitions
 
-Je viens de recevoir le rapport de QA pour la phase 1 du projet. Il y a plusieurs bogues, dont un qui fait planter l'application ! 
-Malheureusement, je ne suis pas au bureau pour les prochains jours (un de mes enfants est tombé malade ce week-end). 
-Je ne sais pas encore quand je pourrai être là dans la semaine. Pourriez-vous prendre en charge la mise en œuvre du projet ? 
-Vous devrez régler les bogues de la phase 1 et mettre en œuvre les éléments de la phase 2 (j'ai ajouté le travail de la phase 2 et les bogues de la section “issues” du repo). 
+Application Flask permettant aux secrétaires de clubs d'échanger leurs points contre des places de compétition. Les données sont dans `clubs.json` et `competitions.json` (pas de base de données, tout est remis à zéro au redémarrage).
 
-Vous devrez cloner et forker le repo et le mettre en place sur votre machine locale (tout ce dont vous avez besoin se trouve dans le fichier README). 
-Ensuite, passez en revue les bogues dans la section des problèmes, puis essayez de reproduire les problèmes sur votre machine locale pour résoudre les bogues et ajouter la gestion des erreurs. 
-Pour gagner du temps de configuration, nous utilisons Flask et JSON pour éviter d'utiliser une base de données. 
-La plupart des outils dont vous aurez besoin se trouvent dans le fichier requirements.txt dans le repo, 
-mais vous devrez installer Flask et notre framework de test préféré, pytest, ainsi que notre outil de test de performance, Locust. 
+## Règles métier (Spécifications fonctionnelles)
 
-Vous devrez également préparer un rapport de test et un rapport de performances, 
-conformément au guide de développement à la fin des spécifications fonctionnelles ci-jointes. 
-Veillez à suivre toutes les directives, car le QA nous reproche de ne pas respecter les normes. 
-Vous devez tester de manière approfondie les résultats requis (à la fois les happy paths et les sad paths) pour toutes les fonctionnalités de l'application.  
-Je vous encourage également à adopter une approche de TDD, car cela vous aidera à rationaliser votre travail. 
+- 1 point = 1 place ; un club ne peut pas réserver plus de places qu'il n'a de points
+- maximum 12 places par club et par compétition (cumul compris)
+- impossible de réserver plus que les places restantes, ni une compétition passée
+- tableau public des points : `/points` (sans connexion)
 
-Une fois que vous aurez terminé, nous ferons un examen de ce que vous avez dans la branche QA du code. 
-Nous examinerons les rapports et la manière dont vous avez résolu les problèmes, 
-nous examinerons votre code et nous testerons la couverture de la nouvelle fonctionnalité. 
+## Installation (Python 3.12)
 
-Merci !
+    git clone <url du dépôt>
+    cd Python_Testing_2627
+    py -3.12 -m venv env
+    env\Scripts\activate
+    pip install -r requirements.txt
+    flask --app server run
 
-```
-1. Why
+Ouvrir http://127.0.0.1:5000. E-mails de test : `john@simplylift.co`, `admin@irontemple.com`, `kate@shelifts.co.uk`. Le style utilise le CDN Tailwind : une connexion internet est nécessaire pour l'affichage.
 
+## Tests
 
-    This is a proof of concept (POC) project to show a light-weight version of our competition booking platform. The aim is the keep things as light as possible, and use feedback from the users to iterate.
+    pytest
+    pytest --cov=server
+    flake8 server.py tests --max-line-length=100
 
-2. Getting Started
+Dossiers : `tests/unit`, `tests/integration`, `tests/performance`.
 
-    This project uses the following technologies:
+Test de charge (serveur lancé dans un autre terminal) :
 
-    * Python v3.x+
+    locust -f tests/performance/locustfile.py --host http://127.0.0.1:5000 --users 6 --spawn-rate 2 --run-time 30s --headless
 
-    * [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+## Conventions
 
-        Whereas Django does a lot of things for us out of the box, Flask allows us to add only what we need. 
-     
+- Branches : `bug/nom-descriptif`, `fonctionnalite/nom-descriptif`, `amelioration/nom-descriptif`, une par sujet
+- Commits : un par unité de travail, préfixés `test:`, `fix:`, `feat:`, `style:`, `refactor:`, `perf:`, `chore:`, `docs:`
+- TDD : le commit `test:` précède le commit `fix:` ou `feat:`
+- `main` ne reçoit que du code dont les tests passent ; la branche `qa` n'est jamais fusionnée
 
-    * [Virtual environment](https://virtualenv.pypa.io/en/stable/installation.html)
+## Rapports
 
-        This ensures you'll be able to install the correct packages without interfering with Python on your machine.
-
-        Before you begin, please ensure you have this installed globally. 
-
-
-3. Installation
-
-    - After cloning, change into the directory and type <code>virtualenv .</code>. This will then set up a a virtual python environment within that directory.
-
-    - Next, type <code>source bin/activate</code>. You should see that your command prompt has changed to the name of the folder. This means that you can install packages in here without affecting affecting files outside. To deactivate, type <code>deactivate</code>
-
-    - Rather than hunting around for the packages you need, you can install in one step. Type <code>pip install -r requirements.txt</code>. This will install all the packages listed in the respective file. If you install a package, make sure others know by updating the requirements.txt file. An easy way to do this is <code>pip freeze > requirements.txt</code>
-
-    - Flask requires that you set an environmental variable to the python file. However you do that, you'll want to set the file to be <code>server.py</code>. Check [here](https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application) for more details
-
-    - You should now be ready to test the application. In the directory, type either <code>flask run</code> or <code>python -m flask run</code>. The app should respond with an address you should be able to go to using your browser.
-
-4. Current Setup
-
-    The app is powered by [JSON files](https://www.tutorialspoint.com/json/json_quick_guide.htm). This is to get around having a DB until we actually need one. The main ones are:
-     
-    * competitions.json - list of competitions
-    * clubs.json - list of clubs with relevant information. You can look here to see what email addresses the app will accept for login.
-
-5. Testing
-
-    You are free to use whatever testing framework you like-the main thing is that you can show what tests you are using.
-
-    We also like to show how well we're testing, so there's a module called 
-    [coverage](https://coverage.readthedocs.io/en/coverage-5.1/) you should add to your project.
-   
- 6. Flake8 Report 
-    
-
-
+Branche `qa` : `docs/rapport-tests.md`, `docs/rapport-performance.md` et `reports/` (couverture HTML, tests, Locust).

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titre %}GUDLFT{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        creme: '#faf7f2',
+                        vert: {
+                            50: '#f2f8f4', 100: '#e0efe5', 200: '#c2dfcc', 300: '#98c8aa',
+                            400: '#66aa80', 500: '#428c62', 600: '#2f714e', 700: '#265c40',
+                            800: '#204a35', 900: '#183a2a'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Cambria', '"Times New Roman"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col bg-creme text-vert-900 antialiased">
+    <header class="bg-vert-800 border-b-4 border-orange-400">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+            <a href="/" class="font-serif text-2xl tracking-wide text-white">
+                GUDLFT
+                <span class="hidden sm:inline font-sans text-sm text-vert-200 ml-2">Réservation de compétitions</span>
+            </a>
+            <nav>
+                <a href="/points"
+                   class="text-sm font-medium text-vert-100 hover:text-orange-300 underline-offset-4 hover:underline">Tableau des points</a>
+            </nav>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="w-full max-w-4xl mx-auto px-4 mt-6 space-y-2">
+        {% for categorie, message in messages %}
+        <p role="alert" data-categorie="{{ categorie }}"
+           class="rounded-lg border px-4 py-3 text-sm font-medium {% if categorie == 'succes' %}bg-vert-50 border-vert-300 text-vert-800{% else %}bg-red-50 border-red-300 text-red-800{% endif %}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <main class="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
+        {% block contenu %}{% endblock %}
+    </main>
+
+    <footer class="py-6 text-center text-xs text-stone-500">
+        GUDLFT · Plateforme régionale de réservation de compétitions
+    </footer>
+</body>
+</html>

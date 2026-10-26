@@ -42,11 +42,12 @@ def parse_places(raw):
 
 def check_booking(places, points, available, already):
     if places > available:
-        return "Error: not enough places available in this competition."
+        return "Erreur : il n'y a pas assez de places disponibles dans cette compétition."
     if places > points:
-        return "Error: not enough points to book this number of places."
+        return "Erreur : vous n'avez pas assez de points pour réserver ce nombre de places."
     if already + places > MAX_PLACES_PER_COMPETITION:
-        return "Error: you cannot book more than 12 places in a competition."
+        return (f"Erreur : vous ne pouvez pas réserver plus de "
+                f"{MAX_PLACES_PER_COMPETITION} places dans une compétition.")
     return None
 
 
@@ -59,7 +60,7 @@ def index():
 def showSummary():
     matching_clubs = [club for club in clubs if club['email'] == request.form['email']]
     if not matching_clubs:
-        flash("Unknown email, please try again.")
+        flash("Adresse e-mail inconnue, veuillez réessayer.", "erreur")
         return render_template('index.html')
     return render_template('welcome.html', club=matching_clubs[0], competitions=competitions)
 
@@ -70,7 +71,7 @@ def book(competition, club):
     foundCompetition = next((c for c in competitions if c['name'] == competition), None)
     if foundClub and foundCompetition:
         return render_template('booking.html', club=foundClub, competition=foundCompetition)
-    flash("Something went wrong-please try again")
+    flash("Une erreur est survenue, veuillez réessayer.", "erreur")
     return render_template('index.html')
 
 
@@ -79,25 +80,25 @@ def purchasePlaces():
     competition = next((c for c in competitions if c['name'] == request.form['competition']), None)
     club = next((c for c in clubs if c['name'] == request.form['club']), None)
     if competition is None or club is None:
-        flash("Something went wrong-please try again")
+        flash("Une erreur est survenue, veuillez réessayer.", "erreur")
         return render_template('index.html')
     placesRequired = parse_places(request.form.get('places'))
     if placesRequired == 0:
-        flash("Error: please enter a valid number of places.")
+        flash("Erreur : veuillez saisir un nombre de places valide.", "erreur")
         return render_template('welcome.html', club=club, competitions=competitions)
     if is_past(competition):
-        flash("Error: this competition has already taken place.")
+        flash("Erreur : cette compétition a déjà eu lieu.", "erreur")
         return render_template('welcome.html', club=club, competitions=competitions)
     already = bookings.get((club['name'], competition['name']), 0)
     error = check_booking(placesRequired, int(club['points']),
                           int(competition['numberOfPlaces']), already)
     if error:
-        flash(error)
+        flash(error, "erreur")
         return render_template('welcome.html', club=club, competitions=competitions)
     bookings[(club['name'], competition['name'])] = already + placesRequired
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
     club['points'] = int(club['points'])-placesRequired
-    flash('Great-booking complete!')
+    flash("Réservation effectuée avec succès !", "succes")
     return render_template('welcome.html', club=club, competitions=competitions)
 
 

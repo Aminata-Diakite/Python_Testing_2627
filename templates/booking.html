@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking for {{competition['name']}} || GUDLFT</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-    <main class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <h2 class="text-xl font-bold text-slate-800 mb-1">{{competition['name']}}</h2>
-        <p class="text-slate-600 mb-6">Places available: {{competition['numberOfPlaces']}}</p>
-        <form action="/purchasePlaces" method="post" class="space-y-4">
+{% extends "base.html" %}
+{% block titre %}Réservation : {{competition['name']}} | GUDLFT{% endblock %}
+{% block contenu %}
+<section class="max-w-md mx-auto bg-white rounded-2xl shadow-md border border-vert-100 overflow-hidden">
+    <div class="h-1.5 bg-gradient-to-r from-vert-600 via-vert-400 to-orange-400"></div>
+    <div class="p-8">
+        <p class="text-xs font-semibold uppercase tracking-widest text-orange-700 mb-1">Réservation</p>
+        <h1 class="font-serif text-2xl text-vert-800 mb-3">{{competition['name']}}</h1>
+        <p class="inline-block rounded-full bg-vert-100 text-vert-800 text-sm font-semibold px-3 py-1 mb-6">Places restantes : {{competition['numberOfPlaces']}}</p>
+        <form action="/purchasePlaces" method="post" class="space-y-5">
             <input type="hidden" name="club" value="{{club['name']}}">
             <input type="hidden" name="competition" value="{{competition['name']}}">
             <div>
-                <label for="places" class="block text-sm font-medium text-slate-700 mb-1">How many places?</label>
+                <label for="places" class="block text-sm font-medium text-vert-800 mb-1">Combien de places ?</label>
                 <input type="number" name="places" id="places" min="1" max="12"
-                       class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+                       class="w-full rounded-lg border border-vert-200 bg-creme px-3 py-2 focus:outline-none focus:border-vert-500 focus:ring-2 focus:ring-orange-300"/>
+                <p class="mt-2 text-xs text-stone-500">1 point = 1 place. Maximum 12 places par club et par compétition.</p>
             </div>
             <button type="submit"
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg py-2">Book</button>
+                    class="w-full rounded-lg bg-orange-400 hover:bg-orange-300 text-vert-900 font-semibold py-2.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-vert-600">Réserver</button>
         </form>
-    </main>
-</body>
-</html>
+    </div>
+</section>
+{% endblock %}

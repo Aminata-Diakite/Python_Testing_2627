@@ -9,7 +9,7 @@ import server
     ("-12", 0), ("abc", 0), ("", 0), (" ", 0), (None, 0),
     ("3.5", 0), ("1e2", 0),
 ])
-def test_parse_places_cases(raw, expected):
+def test_parse_places_cas_limites(raw, expected):
     assert server.parse_places(raw) == expected
 
 
@@ -31,7 +31,7 @@ def test_parse_places_cases(raw, expected):
     (12, 12, 13, 1, False),
     (6, 6, 6, 6, True),
 ])
-def test_check_booking_cases(places, points, available, already, accepted):
+def test_check_booking_cas_limites(places, points, available, already, accepted):
     result = server.check_booking(places, points, available, already)
     assert (result is None) is accepted
 
@@ -43,5 +43,5 @@ def test_check_booking_cases(places, points, available, already, accepted):
     ("2500-06-15 08:30:00", False),
     ("2038-01-19 03:14:07", False),
 ])
-def test_is_past_cases(date, expected):
+def test_is_past_cas_limites(date, expected):
     assert server.is_past({"date": date}) is expected

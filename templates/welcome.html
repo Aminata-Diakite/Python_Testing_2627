@@ -27,7 +27,7 @@
         <p class="text-sm text-stone-600">Places restantes : {{comp['numberOfPlaces']}}</p>
         {%if comp['numberOfPlaces']|int > 0 and not is_past(comp)%}
         <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}"
-           class="mt-4 inline-block self-start rounded-lg bg-orange-400 hover:bg-orange-500 text-vert-900 text-sm font-semibold px-4 py-2 shadow-sm">Réserver des places</a>
+           class="mt-4 inline-block self-start rounded-lg bg-orange-400 hover:bg-orange-300 text-vert-900 text-sm font-semibold px-4 py-2 shadow-sm">Réserver des places</a>
         {%endif%}
     </li>
     {% endfor %}

@@ -19,7 +19,7 @@ def test_tableau_des_points_reflete_les_points_apres_une_reservation(client):
         data={"club": "Simply Lift", "competition": "Spring Festival", "places": "3"},
     )
     response = client.get("/points")
-    assert b"<td>10</td>" in response.data
+    assert b">10</td>" in response.data
 
 
 def test_tableau_des_points_contient_un_lien_vers_la_connexion(client):

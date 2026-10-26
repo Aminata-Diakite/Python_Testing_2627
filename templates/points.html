@@ -1,27 +1,28 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Points des clubs | GUDLFT</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-slate-100 p-4">
-    <main class="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-8">
-        <h1 class="text-2xl font-bold text-slate-800 mb-2">Points de tous les clubs</h1>
-        <a href="/" class="text-sm text-indigo-600 hover:underline">Retour à la connexion</a>
-        <table class="w-full mt-6 text-left">
+{% extends "base.html" %}
+{% block titre %}Points des clubs | GUDLFT{% endblock %}
+{% block contenu %}
+<section class="max-w-xl mx-auto bg-white rounded-2xl shadow-md border border-vert-100 overflow-hidden">
+    <div class="h-1.5 bg-gradient-to-r from-vert-600 via-vert-400 to-orange-400"></div>
+    <div class="p-8">
+        <h1 class="font-serif text-2xl text-vert-800 mb-1">Points de tous les clubs</h1>
+        <p class="text-sm text-stone-600 mb-6">Tableau public en lecture seule, mis à jour après chaque réservation.</p>
+        <table class="w-full text-left">
             <thead>
-                <tr class="border-b border-slate-200 text-slate-600">
-                    <th class="py-2">Club</th><th class="py-2">Points</th>
+                <tr class="bg-vert-800 text-vert-50 text-sm">
+                    <th class="py-2.5 px-4 rounded-tl-lg font-medium">Club</th>
+                    <th class="py-2.5 px-4 rounded-tr-lg font-medium text-right">Points</th>
                 </tr>
             </thead>
             <tbody>
                 {% for club in clubs %}
-                <tr class="border-b border-slate-100"><td>{{ club['name'] }}</td><td>{{ club['points'] }}</td></tr>
+                <tr class="odd:bg-white even:bg-vert-50 border-b border-vert-100">
+                    <td class="py-3 px-4 text-vert-900">{{ club['name'] }}</td>
+                    <td class="py-3 px-4 text-right font-semibold text-orange-700">{{ club['points'] }}</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </main>
-</body>
-</html>
+        <a href="/" class="block mt-6 text-center text-sm text-vert-700 hover:text-orange-700 underline underline-offset-4">Retour à la connexion</a>
+    </div>
+</section>
+{% endblock %}

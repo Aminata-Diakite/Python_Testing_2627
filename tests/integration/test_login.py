@@ -1,10 +1,13 @@
-def test_login_with_known_email_shows_summary(client):
+from tests.helpers import texte
+
+
+def test_connexion_avec_un_email_connu_affiche_le_resume(client):
     response = client.post("/showSummary", data={"email": "john@simplylift.co"})
     assert response.status_code == 200
-    assert b"Welcome, john@simplylift.co" in response.data
+    assert "Bienvenue, john@simplylift.co" in texte(response)
 
 
-def test_login_with_unknown_email_shows_error_and_does_not_crash(client):
+def test_connexion_avec_un_email_inconnu_affiche_une_erreur_sans_planter(client):
     response = client.post("/showSummary", data={"email": "inconnu@nowhere.com"})
     assert response.status_code == 200
-    assert b"Unknown email" in response.data
+    assert "Adresse e-mail inconnue" in texte(response)

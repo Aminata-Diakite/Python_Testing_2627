@@ -28,6 +28,7 @@ def test_reservation_reduit_les_places_de_la_competition(client):
     response = reserver(client, "Simply Lift", "Spring Festival", 3)
     assert response.status_code == 200
     assert "Réservation effectuée avec succès" in texte(response)
+    assert 'data-categorie="succes"' in texte(response)
     assert int(trouver_competition("Spring Festival")["numberOfPlaces"]) == 22
 
 
@@ -40,6 +41,7 @@ def test_reservation_deduit_les_points_du_club(client):
 def test_reservation_au_dela_des_points_du_club_est_refusee(client):
     response = reserver(client, "Iron Temple", "Spring Festival", 5)
     assert "pas assez de points" in texte(response)
+    assert 'data-categorie="erreur"' in texte(response)
     assert int(trouver_club("Iron Temple")["points"]) == 4
     assert int(trouver_competition("Spring Festival")["numberOfPlaces"]) == 25
 
@@ -94,6 +96,7 @@ def test_page_daccueil_masque_le_lien_de_reservation_des_competitions_passees(cl
     response = client.post("/showSummary", data={"email": "john@simplylift.co"})
     assert b"/book/Old%20Cup/" not in response.data
     assert b"/book/Spring%20Festival/" in response.data
+    assert "Terminée" in texte(response)
 
 
 def test_reservation_de_zero_place_est_refusee(client):

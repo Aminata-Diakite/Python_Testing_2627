@@ -12,7 +12,7 @@ class SecretaryUser(HttpUser):
             catch_response=True,
         ) as response:
             if response.elapsed.total_seconds() > 5:
-                response.failure("Chargement des competitions > 5 s")
+                response.failure("Chargement des compétitions > 5 s")
 
     @task(1)
     def update_points(self):
@@ -22,7 +22,7 @@ class SecretaryUser(HttpUser):
             catch_response=True,
         ) as response:
             if response.elapsed.total_seconds() > 2:
-                response.failure("Mise a jour des points > 2 s")
+                response.failure("Mise à jour des points > 2 s")
 
     @task(1)
     def view_points_board(self):

@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking for {{competition['name']}} || GUDLFT</title>
+    <title>Réservation : {{competition['name']}} | GUDLFT</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-slate-100 flex items-center justify-center p-4">
     <main class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
         <h2 class="text-xl font-bold text-slate-800 mb-1">{{competition['name']}}</h2>
-        <p class="text-slate-600 mb-6">Places available: {{competition['numberOfPlaces']}}</p>
+        <p class="text-slate-600 mb-6">Places restantes : {{competition['numberOfPlaces']}}</p>
         <form action="/purchasePlaces" method="post" class="space-y-4">
             <input type="hidden" name="club" value="{{club['name']}}">
             <input type="hidden" name="competition" value="{{competition['name']}}">
             <div>
-                <label for="places" class="block text-sm font-medium text-slate-700 mb-1">How many places?</label>
+                <label for="places" class="block text-sm font-medium text-slate-700 mb-1">Combien de places ?</label>
                 <input type="number" name="places" id="places" min="1" max="12"
                        class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
             </div>
             <button type="submit"
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg py-2">Book</button>
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg py-2">Réserver</button>
         </form>
     </main>
 </body>

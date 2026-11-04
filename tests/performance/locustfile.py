@@ -4,6 +4,9 @@ from locust import HttpUser, task, between
 class SecretaryUser(HttpUser):
     wait_time = between(1, 2)
 
+    def on_start(self):
+        self.client.post("/showSummary", data={"email": "kate@shelifts.co.uk"})
+
     @task(3)
     def load_competitions(self):
         with self.client.post(

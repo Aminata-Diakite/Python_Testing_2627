@@ -1,3 +1,6 @@
+from tests.helpers import connecter
+
+
 def test_tableau_des_points_est_public_et_liste_tous_les_clubs(client):
     response = client.get("/points")
     assert response.status_code == 200
@@ -14,6 +17,7 @@ def test_tableau_des_points_affiche_les_points_de_chaque_club(client):
 
 
 def test_tableau_des_points_reflete_les_points_apres_une_reservation(client):
+    connecter(client, "Simply Lift")
     client.post(
         "/purchasePlaces",
         data={"club": "Simply Lift", "competition": "Spring Festival", "places": "3"},

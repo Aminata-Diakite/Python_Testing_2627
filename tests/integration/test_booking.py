@@ -1,8 +1,9 @@
 import server
-from tests.helpers import texte
+from tests.helpers import connecter, texte
 
 
 def reserver(client, club, competition, places):
+    connecter(client, club)
     return client.post(
         "/purchasePlaces",
         data={"club": club, "competition": competition, "places": str(places)},

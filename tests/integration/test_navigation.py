@@ -1,7 +1,8 @@
-from tests.helpers import texte
+from tests.helpers import connecter, texte
 
 
 def test_page_de_reservation_pour_un_club_et_une_competition_connus(client):
+    connecter(client, "Simply Lift")
     response = client.get("/book/Spring Festival/Simply Lift")
     assert response.status_code == 200
     assert "Spring Festival" in texte(response)

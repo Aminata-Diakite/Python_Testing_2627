@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, flash, url_for, session
 
 
 def loadClubs():
@@ -62,6 +62,7 @@ def showSummary():
     if not matching_clubs:
         flash("Adresse e-mail inconnue, veuillez réessayer.", "erreur")
         return render_template('index.html')
+    session['club'] = matching_clubs[0]['name']
     return render_template('welcome.html', club=matching_clubs[0], competitions=competitions)
 
 
@@ -70,6 +71,9 @@ def book(competition, club):
     foundClub = next((c for c in clubs if c['name'] == club), None)
     foundCompetition = next((c for c in competitions if c['name'] == competition), None)
     if foundClub and foundCompetition:
+        if session.get('club') != foundClub['name']:
+            flash("Veuillez vous connecter pour réserver.", "erreur")
+            return redirect(url_for('index'))
         return render_template('booking.html', club=foundClub, competition=foundCompetition)
     flash("Une erreur est survenue, veuillez réessayer.", "erreur")
     return render_template('index.html')
@@ -82,6 +86,9 @@ def purchasePlaces():
     if competition is None or club is None:
         flash("Une erreur est survenue, veuillez réessayer.", "erreur")
         return render_template('index.html')
+    if session.get('club') != club['name']:
+        flash("Veuillez vous connecter pour réserver.", "erreur")
+        return redirect(url_for('index'))
     placesRequired = parse_places(request.form.get('places'))
     if placesRequired == 0:
         flash("Erreur : veuillez saisir un nombre de places valide.", "erreur")
@@ -109,4 +116,5 @@ def points():
 
 @app.route('/logout')
 def logout():
+    session.clear()
     return redirect(url_for('index'))

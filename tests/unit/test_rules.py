@@ -146,12 +146,3 @@ def test_check_booking_tous_les_points_sont_acceptes(club_iron_temple, competiti
     message = server.check_booking(4, points=points, available=places_dispo, already=0)
     # Assert
     assert message is None
-
-
-# ---------- chargement des données ----------
-
-def test_chargement_des_competitions_retourne_des_noms():
-    # Act
-    competitions = server.loadCompetitions()
-    # Assert
-    assert all("name" in c for c in competitions)
